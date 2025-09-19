@@ -1,0 +1,538 @@
+<!--
+
+.
+
+📌 O que é o .map()?
+. É um método de arrays do JavaScript.
+. Ele percorre cada item do array e devolve um novo array com o resultado.
+. A sintaxe básica é:
+
+array.map((item, index) => {
+  return algumaCoisa;
+});
+
+. item → o elemento atual do array.
+. index → a posição desse elemento no array (0, 1, 2...).
+. return → o valor que você quer colocar no novo array.
+
+📌 Exemplo simples
+const numeros = [1, 2, 3];
+const dobrados = numeros.map((n) => n * 2);
+console.log(dobrados); // [2, 4, 6]
+
+
+👉 Aqui o .map() passou por cada número, multiplicou por 2 e devolveu um novo array.
+
+📌 Exemplo no React
+Quando usamos no React, normalmente queremos renderizar listas de elementos:
+
+const frutas = ["Maçã", "Banana", "Uva"];
+
+<ul>
+  {frutas.map((fruta, index) => (
+    <li key={index}>{fruta}</li>
+  ))}
+</ul>
+
+Resultado na tela:
+. Maçã
+. Banana
+. Uva
+
+Detalhe importante:
+. Sempre que usamos .map() pra renderizar, precisamos do atributo key.
+. A key ajuda o React a identificar cada item da lista.
+. Pode ser o index, mas o ideal é algo único como id.
+
+
+
+
+map no projeto:
+no nosso projeto usamos o map com o objeto gasto
+Então vamos usar .map() assim:
+
+<ul className="list-group">
+  {gastos.map((gasto) => (
+    <li key={gasto.id} className="list-group-item">
+      {gasto.descricao} - R$ {gasto.valor} ({gasto.tipo})
+    </li>
+  ))}
+</ul>
+
+
+👉 Isso vai gerar um <li> para cada gasto.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+📌 Parte 1 – De onde vêm "Receita" e "Despesa"?
+Lembra lá no formulário (FormularioGasto) que temos:
+
+<select
+  className="form-select"
+  value={tipo}
+  onChange={(e) => setTipo(e.target.value)}
+>
+  <option value="Receita">Receita</option>
+  <option value="Despesa">Despesa</option>
+</select>
+
+👉 Quando você escolhe no select, o estado tipo recebe exatamente 
+"Receita" ou "Despesa" (com inicial maiúscula, do jeito que tá no value).
+
+Então, cada gasto salvo no array tem essa estrutura:
+js:
+{
+  id: 123456,
+  descricao: "Aluguel",
+  valor: 1000,
+  tipo: "Despesa"   // <- vem direto do select
+}
+
+É daí que vêm essas palavras.
+
+
+
+📌 Parte 2 – O que faz o .filter()?
+. O .filter() percorre o array e retorna apenas os itens que passam na condição.
+. Sintaxe:
+
+array.filter((item) => condição)
+
+Exemplo:
+const numeros = [1, 2, 3, 4, 5];
+const pares = numeros.filter((n) => n % 2 === 0);
+
+console.log(pares); // [2, 4]
+
+
+👉 No nosso caso:
+js:
+gastos.filter((gasto) => gasto.tipo === "Receita")
+
+. Isso pega só os objetos cujo tipo é "Receita".
+. Se você tivesse 5 gastos e só 2 fossem receitas, o resultado seria um array com só esses 2.
+
+
+
+📌 Parte 3 – O que faz o .reduce()?
+. O .reduce() serve para transformar um array em um único valor.
+. Ele recebe 2 parâmetros principais:
+  . acc (acumulador → onde a soma fica guardada).
+  . item (o elemento atual do array).
+
+Sintaxe:
+array.reduce((acc, item) => {
+  return acc + algumaCoisa;
+}, valorInicial)
+
+
+Exemplo:
+const numeros = [1, 2, 3];
+const soma = numeros.reduce((acc, n) => acc + n, 0);
+
+console.log(soma); // 6
+
+👉 O 0 no final é o valor inicial do acumulador (começa a soma a partir de 0).
+Se fosse 10, a soma já começaria em 10.
+
+
+
+
+
+📌 Parte 4 – Aplicando à nossa lógica:
+const totalReceitas = gastos
+  .filter((gasto) => gasto.tipo === "Receita")
+  .reduce((acc, gasto) => acc + gasto.valor, 0);
+
+
+Passo a passo:
+1. filter → pega só os gastos que são receita.
+2. reduce → soma todos os valor desses gastos.
+3. 0 → soma começa do zero.
+
+Exemplo com gastos:
+gastos = [
+  { descricao: "Salário", valor: 3000, tipo: "Receita" },
+  { descricao: "Aluguel", valor: 1200, tipo: "Despesa" },
+  { descricao: "Freelance", valor: 800, tipo: "Receita" }
+]
+
+. filter → pega só receitas:
+js:
+[{ descricao: "Salário", valor: 3000 }, { descricao: "Freelance", valor: 800 }]
+
+. reduce → soma valores:
+  0 + 3000 + 800 = 3800
+
+👉 Resultado: totalReceitas = 3800.
+Mesma lógica vale para despesas.
+
+
+Depois:
+const saldo = totalReceitas - totalDespesas;
+js:
+Esse é o saldo final.
+
+
+✅ Resumindo bem claro:
+. "Receita" e "Despesa" vêm do select do formulário.
+. filter pega só os itens com tipo correspondente.
+. reduce soma todos os valores.
+. 0 é de onde a soma começa.    
+
+
+
+
+
+
+
+
+
+
+
+
+
+📌 O que é o localStorage:
+. É um recurso do navegador que guarda dados simples em formato de texto.
+. Funciona como uma caixinha de pares chave → valor.
+. Sempre que a gente salva algo, é convertido para string.
+
+
+👉 Métodos principais:
+
+localStorage.setItem("chave", "valor");   // salvar
+localStorage.getItem("chave");           // ler
+localStorage.removeItem("chave");        // apagar 1 item
+localStorage.clear();                    // apagar tudo
+
+
+⚠️ Importante: só armazena strings. Então se queremos guardar um array ou objeto, usamos:
+. JSON.stringify(objeto) para salvar.
+. JSON.parse(string) para ler de volta.
+
+
+
+
+📌 Como funciona no React:
+
+No nosso projeto, queremos:
+1. Quando o App inicia → buscar no localStorage se já existem gastos salvos.
+2. Sempre que gastos mudar → atualizar o localStorage.
+
+
+
+
+📌 Estrutura no código:
+1. Estado inicial lendo do localStorage
+
+Normalmente a gente faria:
+const [gastos, setGastos] = useState([]);
+
+
+Mas isso sempre começa vazio.
+
+👉 Então trocamos por uma função inicializadora:
+
+const [gastos, setGastos] = useState(() => {
+  const dadosSalvos = localStorage.getItem("gastos"); // tenta buscar do localStorage
+  return dadosSalvos ? JSON.parse(dadosSalvos) : [];  // se achar, transforma em array; se não, volta []
+});
+
+
+Explicando:
+. localStorage.getItem("gastos") → procura algo salvo com a chave "gastos".
+. Se existir, vai ser uma string tipo:
+"[{\"id\":123,\"descricao\":\"Aluguel\",\"valor\":1000,\"tipo\":\"Despesa\"}]".
+. JSON.parse(...) → transforma essa string de volta num array de objetos.
+. Se não existir nada, usamos [] (array vazio).
+
+Essa função no useState só roda uma vez, quando o componente monta, o que evita reprocessar em todo re-render.
+
+
+
+
+2. Salvando sempre que gastos mudar:
+Agora precisamos atualizar o localStorage sempre que adicionarmos/removermos um gasto.
+Pra isso usamos o useEffect:
+
+useEffect(() => {
+  localStorage.setItem("gastos", JSON.stringify(gastos));
+}, [gastos]);
+
+
+Explicando:
+. useEffect(() => { ... }, [gastos]) → esse efeito roda sempre que gastos mudar.
+. localStorage.setItem("gastos", ...) → salva no navegador.
+. JSON.stringify(gastos) → converte o array de objetos para string, porque o localStorage só aceita strings.
+
+
+
+📌 Linha do tempo da lógica:
+1. O usuário abre o app → useState busca no localStorage → se tinha dados, carrega.
+2. O usuário adiciona um gasto → setGastos atualiza o estado.
+3. O useEffect detecta a mudança → salva a versão atualizada no localStorage.
+4. O usuário fecha e abre de novo → estado começa com os dados salvos.
+
+
+
+
+📌 Analogia:
+Imagina que o estado (gastos) é um caderno que tu tá escrevendo agora.
+O localStorage é como se fosse um armário no qual tu guarda esse caderno quando fecha o app.
+. JSON.stringify → é como tirar uma foto em texto do caderno antes de guardar no armário.
+. JSON.parse → é como revelar essa foto em formato de caderno de novo quando tu abre.
+. O useEffect → é o lembrete automático: “toda vez que tu escrever algo novo no caderno, tira uma nova foto e guarda no armário”.
+
+
+
+
+✅ Resumindo:
+. getItem → buscar.
+. setItem → salvar.
+ .JSON.stringify/parse → conversão necessária porque o localStorage só guarda string.
+. useEffect → garante atualização automática toda vez que o estado muda.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Explicação exclusiva do .find
+Agora vamos destrinchar o método .find, do jeitinho que fiz com map, filter e reduce.
+
+🔹 O que é:
+.find() é um método de array do JavaScript que procura o primeiro elemento que satisfaz uma condição e retorna ele.
+
+
+
+🔹 Sintaxe:
+array.find((elemento) => condição)
+
+. elemento → cada item do array (um por vez).
+. condição → uma expressão que precisa ser verdadeira.
+. Retorno → o primeiro elemento que bate com a condição, ou undefined se nenhum bater.
+
+
+
+🔹 Exemplo simples:
+const numeros = [10, 20, 30, 40];
+const resultado = numeros.find((n) => n > 25);
+console.log(resultado); // 30 (o primeiro número maior que 25)
+
+
+
+🔹 No nosso caso:
+const gasto = gastos.find((gasto) => gasto.id === id);
+
+1. .find percorre o array gastos.
+2. Em cada volta, compara gasto.id com o id passado pelo botão.
+3. Quando encontra o gasto certo → retorna esse objeto.
+4. Guardamos ele no estado gastoEmEdicao.
+
+
+
+
+
+✅ Resumindo:
+. .find retorna o primeiro elemento que satisfaz a condição — aqui, o gasto com id igual ao clicado.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+📘 Diferença entre aoEnviarFormulario e salvarGasto
+
+1. Quando surgiu a função aoEnviarFormulario
+. No início do projeto, o app só tinha a funcionalidade de adicionar gastos.
+. Por isso, criamos uma função exclusiva para esse fluxo:
+
+function aoEnviarFormulario(event) {
+  event.preventDefault();
+
+  const novoGasto = {
+    id: Date.now(),
+    descricao,
+    valor: parseFloat(valor),
+    tipo,
+  };
+
+  aoAdicionar(novoGasto);
+
+  setDescricao("");
+  setValor("");
+  setTipo("Receita");
+}
+
+
+📌 O que ela fazia:
+. Impedia o reload do formulário (event.preventDefault()).
+. Criava um novo objeto gasto.
+. Chamava a função aoAdicionar.
+. Limpava os campos do formulário.
+
+⚠️ Limitação: só servia para adicionar. Não sabia lidar com edição.
+
+
+
+2. Quando surgiu a função salvarGasto:
+. Depois, adicionamos a funcionalidade de editar gastos existentes.
+. Agora o formulário precisa ser mais inteligente:
+  . Se não houver gasto em edição → criar um novo.
+  . Se houver gasto em edição → atualizar o gasto existente.
+
+function salvarGasto(evento) {
+  evento.preventDefault();
+
+  const gastoAtualizado = {
+    id: gastoSelecionado ? gastoSelecionado.id : Date.now(),
+    descricao,
+    valor: parseFloat(valor),
+    tipo,
+  };
+
+  aoGerenciar(gastoAtualizado);
+
+  setDescricao("");
+  setValor("");
+  setTipo("Receita");
+}
+
+
+📌 O que ela faz:
+. Impede o reload do formulário (evento.preventDefault()).
+. Cria um objeto gasto:
+  . Se tem gastoSelecionado → usa o mesmo id (edição).
+  . Se não tem → gera um novo id (adição).
+. Chama aoGerenciar, que decide se vai adicionar ou atualizar.
+. Limpa os campos do formulário.
+
+✅ Vantagem: cobre os dois cenários (adição e edição).
+
+
+
+
+3. Por que precisamos só de uma função agora:
+. aoEnviarFormulario → só servia para adicionar, deixou de ser útil quando introduzimos edição.
+. salvarGasto → é mais completa, cobre os dois cenários.
+
+Se mantivéssemos as duas:
+. Teríamos código duplicado.
+. Corríamos risco de confundir qual usar no onSubmit.
+. O código ficaria menos limpo e mais difícil de manter.
+
+📌 Conclusão
+. No começo, fazia sentido ter aoEnviarFormulario porque o app só adicionava.
+. Quando passamos a ter edição, o fluxo de adicionar e editar pôde ser unificado numa só função.
+. salvarGasto substitui aoEnviarFormulario e é suficiente para o formulário, mantendo o código mais limpo, claro e escalável.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+modificações feitas: 17:20 do 17/09/2025:
+
+3) CRUD — como o fluxo de edição funciona agora (linha por linha)
+
+1. Adicionar:
+. O FormularioGasto cria um objeto gasto (com id, descricao, valor, tipo) e chama aoGerenciar(gasto).
+. gerenciarGasto detecta que não há gastoSelecionado e faz setGastos([...gastos, gasto]).
+. Chama mostrarAlerta(..., "success").
+
+2. Editar:
+. O botão editar na lista chama aoEditar(id) (prop ligada a abrirEdicao).
+. abrirEdicao encontra o gasto e setGastoSelecionado(gasto).
+. O FormularioGasto (com useEffect) pré-preenche os inputs com gastoSelecionado.
+. Ao submeter o formulário, aoGerenciar é chamado com o objeto atualizado (mesmo id).
+. gerenciarGasto detecta que há gastoSelecionado e substitui o item no array (map).
+. Limpa gastoSelecionado (setGastoSelecionado(null)) para voltar ao modo "adicionar".
+. Chama mostrarAlerta(..., "warning").
+
+Remover:
+. removerGasto(id) cria nova lista via filter e faz setGastos(novaLista).
+. Chama mostrarAlerta(..., "danger").
+
+
+
+4) Alerta — agora um objeto com mensagem e tipo
+Antes você guardava uma string; agora o estado alerta mantém um objeto:
+{ mensagem: "Gasto adicionado", tipo: "success" }
+
+
+Vantagens:
+. tipo mapeia diretamente para classes Bootstrap (alert-success, alert-danger), então estilo e lógica ficam juntos.
+. Fácil de estender (p.ex. duracao, acao).
+
+Timeout seguro:
+. Uso de timeoutRef para evitar acúmulo de timeouts quando o usuário dispara alertas rápidos.
+. Ao criar novo alerta limpamos timeoutRef.current antigo, e então setamos um novo setTimeout.
+. Há também cleanup no useEffect para limpar timeout se o componente desmontar.
+. Isso evita comportamento estranho (alertas que somem depois de tempos antigos) e evita vazamento de timers.
+
+
+-->
