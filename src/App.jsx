@@ -123,10 +123,10 @@ export default function App() {
         />
 
        
-       <div className='mb-3 text-center'>
-        <button onClick={() => setFiltro('Todos')}>Todos</button>
-        <button onClick={() => setFiltro('Receita') }>Receitas</button>
-        <button onClick={() => setFiltro("Despesa")}>Despesas</button>
+       <div className='btn-group mb-3 w-100" role="group" '>
+        <button className={`btn ${filtro === "Todos" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setFiltro('Todos')}>Todos</button>
+        <button className= {` btn ${filtro == 'receita' ? 'btn-success' : 'btn-outline-success'}`} onClick={() => setFiltro('Receita') }>Receitas</button>
+        <button className={` btn ${filtro === 'despesa' ? 'btn-danger' : 'btn-outline-danger'}`} onClick={() => setFiltro("Despesa")}>Despesas</button>
        </div>
         {/* Lista de gastos */}
         <ListaGastos
