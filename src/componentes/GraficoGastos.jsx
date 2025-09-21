@@ -7,21 +7,27 @@ export default function GraficoGastos({ receitas, despesas }) {
   ];
 
   return (
-    <PieChart width={300} height={300}>
-      <Pie
-        data={dadosGrafico}
-        dataKey="value"
-        nameKey="name"
-        cx="50%"
-        cy="50%"
-        outerRadius={100}
-        label
-      >
-        <Cell fill="#28a745" /> {/* verde */}
-        <Cell fill="#dc3545" /> {/* vermelho */}
-      </Pie>
-      <Tooltip />
-      <Legend />
-    </PieChart>
+    <div className="p5">
+    
+<ResponsiveContainer width="100%" height={300}>
+  <PieChart>
+    <Pie
+      data={dadosGrafico}
+      dataKey="value"
+      nameKey="name"
+      cx="50%"
+      cy="50%"
+      outerRadius="80%"
+      label
+    >
+      <Cell fill="#28a745" />
+      <Cell fill="#dc3545" />
+    </Pie>
+    <Tooltip />
+    <Legend />
+  </PieChart>
+</ResponsiveContainer>
+      </div>
   );
+
 }

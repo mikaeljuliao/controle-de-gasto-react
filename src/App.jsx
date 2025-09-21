@@ -22,6 +22,8 @@ export default function App() {
   const timeoutRef = useRef(null); // para controlar o timeout do alerta
 
   const [filtro, setFiltro] = useState('Todos')
+  
+  const [busca, setBusca] = useState('')
 
   useEffect(() => {
     localStorage.setItem("gastos", JSON.stringify(gastos));
@@ -97,15 +99,17 @@ export default function App() {
   }, []);
 
 
-
-  const  gastosFiltrados = 
-  filtro === 'Todos' 
-  ?  gastos 
-  : gastos.filter((gasto) => gasto.tipo === filtro)
+  const gastosFiltrados = gastos
+  // filtro por tipo
+  .filter((gasto) => filtro === "Todos" || gasto.tipo === filtro)
+  // filtro por busca
+  .filter((gasto) =>
+    gasto.descricao.toLowerCase().includes(busca.toLowerCase())
+  );
 
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
+    <div className="container d-flex justify-content-center align-items-center ">
       <div className="p-4 shadow rounded bg-white" style={{ maxWidth: "600px", width: "100%" }}>
         <h1 className="text-center mb-4">Controle de gastos</h1>
 
@@ -127,6 +131,14 @@ export default function App() {
         <button className={`btn ${filtro === "Todos" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setFiltro('Todos')}>Todos</button>
         <button className= {` btn ${filtro == 'receita' ? 'btn-success' : 'btn-outline-success'}`} onClick={() => setFiltro('Receita') }>Receitas</button>
         <button className={` btn ${filtro === 'despesa' ? 'btn-danger' : 'btn-outline-danger'}`} onClick={() => setFiltro("Despesa")}>Despesas</button>
+       </div>
+
+       <div className='mb-3 text-center'>
+         <input type="text"
+         placeholder='Digite seu gasto'
+         value={busca}
+         onChange={(e) => setBusca(e.target.value)}
+         className='form-control' />
        </div>
         {/* Lista de gastos */}
         <ListaGastos

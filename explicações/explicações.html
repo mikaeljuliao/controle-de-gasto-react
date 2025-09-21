@@ -535,4 +535,324 @@ Timeout seguro:
 . Isso evita comportamento estranho (alertas que somem depois de tempos antigos) e evita vazamento de timers.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+🎓 Aula: Criando Gráficos com Recharts no React
+1. O que é o Recharts?
+
+. Recharts é uma biblioteca de gráficos feita para React.
+. Baseada em D3.js (uma das libs mais poderosas de visualização de dados), 
+mas com componentes React prontos.
+. Ou seja: você não precisa mexer em matemática nem SVG manualmente, o 
+Recharts já abstrai isso.
+. Você só precisa passar dados em forma de array de objetos + escolher 
+um tipo de gráfico (Pizza, Barra, Linha etc).
+
+👉 Documentação oficial: https://recharts.org
+
+
+
+
+2. A lógica de funcionamento:
+1. Criamos um array de objetos que contém os dados que queremos mostrar.
+
+const dadosGrafico = [
+  { name: "Receitas", value: receitas },
+  { name: "Despesas", value: despesas },
+];
+
+  . name → nome que aparecerá na legenda.
+  . value → valor numérico que será representado na pizza (ou barra, etc).
+2. Passamos esse array para o componente de gráfico do Recharts (ex.: <Pie />).
+3. O Recharts renderiza automaticamente o gráfico, criando proporções de acordo com os valores.
+
+
+
+3. Estrutura do gráfico que fizemos:
+<PieChart width={300} height={300}>
+  <Pie
+    data={dadosGrafico}
+    dataKey="value"
+    nameKey="name"
+    cx="50%"
+    cy="50%"
+    outerRadius={100}
+    label
+  >
+    <Cell fill="#28a745" />  {/* verde para receitas */}
+    <Cell fill="#dc3545" />  {/* vermelho para despesas */}
+  </Pie>
+  <Tooltip />
+  <Legend />
+</PieChart>
+
+
+Vamos destrinchar:
+1. <PieChart>
+. É o container do gráfico de pizza.
+. Define width (largura) e height (altura).
+. Tudo que está dentro dele (como <Pie>, <Tooltip>, <Legend>) compõe o gráfico.
+
+
+2. <Pie>:
+. O gráfico em si (a pizza).
+. Propriedades principais:
+  . data={dadosGrafico} → diz de onde vêm os dados.
+  . dataKey="value" → qual campo do objeto usar para os valores (tamanho da fatia).
+  . nameKey="name" → qual campo usar para os nomes na legenda.
+  . cx="50%" e cy="50%" → centralização no gráfico (50% do container → centro).
+  . outerRadius={100} → tamanho do raio da pizza.
+  . label → ativa os rótulos nas fatias (exibe os valores ou nomes).
+
+
+
+3. <Cell>:
+. Define a cor de cada fatia.
+. Cada <Cell> corresponde a um item do array dadosGrafico.
+  . O primeiro <Cell> será aplicado à primeira posição (Receitas).
+  . O segundo <Cell> será aplicado à segunda posição (Despesas).
+
+👉 No nosso exemplo:
+<Cell fill="#28a745" />  // Receitas (verde)
+<Cell fill="#dc3545" />  // Despesas (vermelho)
+
+
+
+4. <Tooltip>:
+. Um balão que aparece quando você passa o mouse sobre uma fatia.
+. Mostra automaticamente name e value.
+. Não precisa configurar nada extra (Recharts já entende).
+
+
+
+5. <Legend>:
+. Adiciona uma legenda embaixo ou ao lado do gráfico.
+. Mostra as cores e os nomes (nameKey).
+. Também se gera automaticamente a partir do data.
+
+
+
+4. Por que usamos GraficoGastos.jsx separado?
+
+👉 Por clean code e reutilização:
+. O App.jsx já cuida de muita coisa (estados, cálculos, localStorage).
+. Deixar o gráfico isolado facilita manutenção e leitura.
+. Se um dia você quiser trocar o tipo de gráfico (pizza → barra), só altera esse componente.
+
+
+
+5. Diferença do "antigo" para agora:
+
+Antes:
+. Você só tinha textos numéricos (Saldo, Receitas, Despesas).
+. Era difícil visualizar rapidamente se estava positivo ou negativo.
+
+Agora:
+. Com o gráfico de pizza, o usuário vê de cara a proporção entre receitas e despesas.
+. Muito mais intuitivo e forte para portfólio, porque dá uma cara profissional ao app.
+
+
+
+
+6. Resumindo (para anotar como aprendizado ✍️):
+1. Recharts é uma lib de gráficos pronta para React.
+2. Você passa os dados como array de objetos.
+3. O PieChart contém o gráfico.
+4. O Pie usa os dados e define raio, posição e rótulos.
+5. Cada Cell define uma cor para cada fatia.
+6. Tooltip mostra detalhes no hover.
+7. Legend gera a legenda automaticamente.
+8. Mantivemos a lógica limpa separando em GraficoGastos.jsx.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+🎓 Aula: Gráfico de Barras no Recharts
+1. Estrutura básica
+
+Um gráfico de barras no Recharts precisa de 3 componentes principais:
+1. <BarChart> → container (igual ao <PieChart> no caso anterior).
+2. <Bar> → representa as barras (receitas/despesas).
+3. Eixos (<XAxis>, <YAxis>) → para mostrar escala e categorias.
+
+
+
+2. Código base (simples):
+
+Suponha que temos o mesmo array:
+
+const dadosGrafico = [
+  { name: "Receitas", value: receitas },
+  { name: "Despesas", value: despesas },
+];
+
+
+Agora montamos o gráfico:
+
+<BarChart width={400} height={300} data={dadosGrafico}>
+  <XAxis dataKey="name" />   {/* eixo X → categorias (Receitas, Despesas) */}
+  <YAxis />                  {/* eixo Y → valores numéricos */}
+  <Tooltip />                {/* tooltip no hover */}
+  <Legend />                 {/* legenda */}
+  <Bar dataKey="value" fill="#8884d8" />  {/* barras (cor padrão roxa) */}
+</BarChart>
+
+
+
+3. Explicando cada parte:
+. <BarChart>
+  . width e height → tamanho do gráfico.
+  . data={dadosGrafico} → de onde vêm os dados.
+. <XAxis dataKey="name" />
+  . O eixo X vai mostrar os nomes que colocamos no campo name (Receitas, Despesas).
+. <YAxis />
+  . O eixo Y mostra os números (valores).
+. <Tooltip />
+  . Igual ao gráfico de pizza: aparece um balãozinho quando passa o mouse.
+. <Legend />
+  . Legenda automática.
+. <Bar dataKey="value" fill="#8884d8" />
+  . dataKey="value" → usa os valores numéricos.
+  . fill="#8884d8" → cor das barras.
+
+
+
+
+4. Melhorando com cores diferentes:
+Se quisermos uma cor para receitas e outra para despesas, precisamos passar duas <Bar> separadas:
+
+<BarChart width={400} height={300} data={dadosGrafico}>
+  <XAxis dataKey="name" />
+  <YAxis />
+  <Tooltip />
+  <Legend />
+  <Bar dataKey="value" fill="#28a745" name="Receitas" /> {/* verde */}
+  <Bar dataKey="value" fill="#dc3545" name="Despesas" /> {/* vermelho */}
+</BarChart>
+
+⚠️ Mas nesse caso, como nosso data tem somente um campo (value), isso faria duas barras iguais.
+👉 A solução correta para diferenciar é mudar o formato do data.
+
+
+
+5. Estrutura de dados para barras lado a lado:
+
+Para ter receitas e despesas em colunas diferentes, precisamos de um data assim:
+
+const dadosGrafico = [
+  { name: "Gastos", receitas: receitas, despesas: despesas }
+];
+
+
+Agora sim conseguimos fazer:
+
+<BarChart width={400} height={300} data={dadosGrafico}>
+  <XAxis dataKey="name" />
+  <YAxis />
+  <Tooltip />
+  <Legend />
+  <Bar dataKey="receitas" fill="#28a745" /> {/* verde */}
+  <Bar dataKey="despesas" fill="#dc3545" /> {/* vermelho */}
+</BarChart>
+
+
+Resultado:
+. Eixo X → mostra apenas uma categoria ("Gastos").
+. No gráfico → aparece uma barra verde (Receitas) e uma barra 
+vermelha (Despesas), lado a lado.
+
+
+
+6. Comparando Pizza x Barra: 
+. Pizza → boa para ver proporção (quanto % é despesa x receita).
+. Barras → boa para ver valores absolutos (quanto cada um tem em números, comparar lados).
+
+👉 Em projetos reais, muitas vezes colocamos os dois juntos: pizza para proporção e barras para valores absolutos.
+
+
+
+
+7. Anotação para aprendizado ✍️
+1. O BarChart funciona parecido com o PieChart, mas precisa de eixos (XAxis, YAxis).
+2. O dataKey aponta qual campo do objeto usar como valor.
+3. Para ter barras lado a lado, precisamos de múltiplos campos no objeto (receitas, despesas).
+4. <Tooltip> e <Legend> funcionam igual ao do PieChart.
+5. O gráfico de barras é ideal para comparações diretas entre valores.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+🔎 Campo de busca controlado pelo React
+
+No React, temos dois tipos de inputs:
+
+Não controlados → o valor fica só no DOM (como no HTML puro).
+
+Controlados → o valor é armazenado no estado do React (useState), e o input mostra sempre esse valor.
+
+No seu caso, o campo de busca é controlado.
+
+Como funciona o ciclo:
+
+Você digita algo no input.
+
+O evento onChange dispara → (e) => setBusca(e.target.value) → isso atualiza o estado busca.
+
+Como o value={busca}, o React pega o estado atualizado e renderiza novamente o input mostrando o novo valor.
+
+Ou seja:
+➡️ O usuário altera → React atualiza o estado → Estado atualiza o valor do input.
+
+Isso cria um "ciclo fechado" onde o React sempre sabe exatamente o que está no input.
+
+⚡ Exemplo prático:
+Se você digitasse "café":
+
+O onChange captura "café".
+
+O setBusca("café") guarda isso no estado.
+
+O React re-renderiza e como value={busca}, o input exibe "café".
 -->
