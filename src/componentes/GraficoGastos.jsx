@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import {ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
 export default function GraficoGastos({ receitas, despesas }) {
   const dadosGrafico = [
