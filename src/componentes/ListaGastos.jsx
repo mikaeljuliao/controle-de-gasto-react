@@ -34,6 +34,7 @@ export default function ListaGastos({ gastos, aoRemover, aoEditar }) {
         className="btn btn-sm btn-outline-primary"
         onClick={() => aoEditar(gasto.id)}
       >
+
         ✏️
       </button>
       <button
@@ -43,6 +44,10 @@ export default function ListaGastos({ gastos, aoRemover, aoEditar }) {
         ❌
       </button>
     </div>
+    <span className='text-multed small text-primary'>{`Adicionado em ${new Date(gasto.dataHora).toLocaleString("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short",
+  })}`}</span>
   </div>
 </li>
 
