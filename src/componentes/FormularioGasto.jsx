@@ -21,6 +21,7 @@ export default function FormularioGasto({ aoGerenciar, gastoSelecionado }) {
       descricao,
       valor: parseFloat(valor),
       tipo,
+      dataHora: gastoSelecionado ? gastoSelecionado.dataHora : new Date().toISOString(),
     };
 
     aoGerenciar(gastoAtualizado);
