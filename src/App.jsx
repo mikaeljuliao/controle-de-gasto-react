@@ -25,6 +25,8 @@ export default function App() {
   
   const [busca, setBusca] = useState('')
 
+  const [tema, setTema] = useState('light')
+
   useEffect(() => {
     localStorage.setItem("gastos", JSON.stringify(gastos));
   }, [gastos]);
@@ -108,9 +110,19 @@ export default function App() {
   );
 
 
+  function alterarTema () {
+    setTema( tema === 'light' ? 'dark' : 'light') 
+
+
+  }
   return (
     <div className="container d-flex justify-content-center align-items-center ">
-      <div className="p-4 shadow rounded bg-white" style={{ maxWidth: "600px", width: "100%" }}>
+      <div className={`p-4 shadow rounded  ${tema === 'light' ? 'bg-white text-dark' : 'bg-dark text-light'}`}
+        style={{ maxWidth: "600px", width: "100%" }}
+>
+        <button className='btn btn-secondary mb-3' onClick={alterarTema}>
+           mudar tema {tema === 'light' ? 'dark' : 'light'}</button>
+      
         <h1 className="text-center mb-4">Controle de gastos</h1>
 
         {/* Alerta aqui */}
