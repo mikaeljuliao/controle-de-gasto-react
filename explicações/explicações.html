@@ -832,15 +832,12 @@ Não controlados → o valor fica só no DOM (como no HTML puro).
 
 Controlados → o valor é armazenado no estado do React (useState), e o input mostra sempre esse valor.
 
-No seu caso, o campo de busca é controlado.
+No meu caso, o campo de busca é controlado.
 
 Como funciona o ciclo:
-
-Você digita algo no input.
-
-O evento onChange dispara → (e) => setBusca(e.target.value) → isso atualiza o estado busca.
-
-Como o value={busca}, o React pega o estado atualizado e renderiza novamente o input mostrando o novo valor.
+. Você digita algo no input.
+. O evento onChange dispara → (e) => setBusca(e.target.value) → isso atualiza o estado busca.
+. Como o value={busca}, o React pega o estado atualizado e renderiza novamente o input mostrando o novo valor.
 
 Ou seja:
 ➡️ O usuário altera → React atualiza o estado → Estado atualiza o valor do input.
@@ -849,10 +846,10 @@ Isso cria um "ciclo fechado" onde o React sempre sabe exatamente o que está no 
 
 ⚡ Exemplo prático:
 Se você digitasse "café":
+. O onChange captura "café".
+. O setBusca("café") guarda isso no estado.
+. O React re-renderiza e como value={busca}, o input exibe "café".
 
-O onChange captura "café".
 
-O setBusca("café") guarda isso no estado.
 
-O React re-renderiza e como value={busca}, o input exibe "café".
 -->
