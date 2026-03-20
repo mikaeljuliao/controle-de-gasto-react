@@ -70,11 +70,13 @@ src/
 
 ---
 
+```
+
 ## ⚙️ Como rodar o projeto
 
 Execute os comandos abaixo no terminal:
 
-```bash
+
 # Clonar o repositório e entrar na pasta
 git clone https://github.com/mikaeljuliao/controle-de-gasto-react.git
 cd controle-de-gasto-react
